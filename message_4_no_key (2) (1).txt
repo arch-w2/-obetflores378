@@ -1,0 +1,617 @@
+--[[
+  Savagex Hub ALL-IN-ONE
+]]
+print("[Savagex] ALL-IN-ONE loading...")
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local DISCORD_URL = "https://discord.gg/gUbApdSG2Y"
+local BLUE = Color3.fromRGB(59, 130, 246)
+local BLUE_HOVER = Color3.fromRGB(96, 165, 250)
+local BG = Color3.fromRGB(28, 28, 32)
+local BG2 = Color3.fromRGB(40, 40, 46)
+
+
+if not game:IsLoaded() then
+ repeat task.wait() until game:IsLoaded()
+end
+if not (game.PlaceId == 104715542330896 or game.PlaceId == 97556409405464) then
+ return
+end
+local function LoadSavagexHub()
+if not game:IsLoaded() then
+ repeat task.wait() until game:IsLoaded()
+end
+if not (game.PlaceId == 104715542330896 or game.PlaceId == 97556409405464) then
+ return
+end
+pcall(function()
+ local RS = game:GetService("ReplicatedStorage")
+ local TransitionModule = require(RS.Modules.Game.UI.TransitionUI)
+ local old_transition = TransitionModule.transition
+ TransitionModule.transition = function(p_in, p_wait, p_out, noLogo)
+  if old_transition then
+   return old_transition(p_in, p_wait, p_out, noLogo)
+  end
+ end
+end)
+pcall(function()
+ local RS = game:GetService("ReplicatedStorage")
+ local CharCreator = require(RS.Modules.Game.CharacterCreator.CharacterCreator)
+ if CharCreator.start then
+  local old_start = CharCreator.start
+  CharCreator.start = function(...)
+   while true do task.wait(1) end
+  end
+ end
+ if CharCreator.load_page then
+  local old_load = CharCreator.load_page
+  CharCreator.load_page = function(...) return old_load(...) end
+ end
+ if CharCreator.initiate then
+  local old_initiate = CharCreator.initiate
+  CharCreator.initiate = function(...) return old_initiate(...) end
+ end
+end)
+pcall(function()
+ if getgenv then getgenv().identifyexecutor = nil end
+end)
+pcall(function()
+ if getfenv then
+  local env = getfenv()
+  env.identifyexecutor = nil
+ end
+end)
+local v_u_1 = {}
+local v2 = game.ReplicatedStorage:WaitForChild("Remotes")
+local v_u_3 = {
+ send = v2:WaitForChild("Send"),
+ get = v2:WaitForChild("Get")
+}
+local v_u_4 = { event = 0, func = 0 }
+local v_u_5 = {}
+local v_u_6 = false
+local v_u_7 = {}
+function v_u_1.on_connect(p8)
+ if v_u_6 then
+  p8()
+ else
+  v_u_7[#v_u_7 + 1] = p8
+ end
+end
+function v_u_1.hook(p_u_9, p_u_10)
+ if not p_u_10 then
+  error("Function nil for hook " .. p_u_9)
+ end
+ if v_u_6 then
+  if v_u_5[p_u_9] then
+   warn("Overwriting hook '" .. p_u_9 .. "'.")
+  else
+   v_u_5[p_u_9] = p_u_10
+  end
+ else
+  v_u_1.on_connect(function()
+   v_u_1.hook(p_u_9, p_u_10)
+  end)
+  return
+ end
+end
+function v_u_1.is_connected(p11)
+ return p11:GetAttribute("IsConnected") and true or false
+end
+local function v_u_19(p12, p13, p14, p15, ...)
+ return p12(p13, p14, p15, ...)
+end
+task.wait(0.05)
+local v_u_20 = v_u_3.send
+local v_u_21 = v_u_3.send.FireServer
+function v_u_1.send(p22, ...)
+ v_u_4.event = v_u_4.event + 1
+ v_u_21(v_u_20, v_u_4.event, p22, ...)
+end
+local v_u_23 = v_u_3.get
+local v_u_24 = v_u_3.get.InvokeServer
+function v_u_1.get(p25, ...)
+ v_u_4.func = v_u_4.func + 1
+ return v_u_24(v_u_23, v_u_4.func, p25, ...)
+end
+task.wait(0.05)
+local function v_u_29()
+ v_u_3.send.OnClientEvent:Connect(function(p26, ...)
+  if v_u_5[p26] then
+   v_u_5[p26](...)
+  else
+   error("Invalid hook '" .. p26 .. "' fired!", 0)
+  end
+ end)
+ function v_u_3.get.OnClientInvoke(p27, ...)
+  if v_u_5[p27] then
+   return v_u_5[p27](...)
+  end
+  error("Invalid hook '" .. p27 .. "' invoked!", 0)
+ end
+ if not pcall(function()
+  for v28 = 1, #v_u_7 do
+   v_u_7[v28]()
+  end
+ end) then
+  pcall(function()
+   print("On connect failed for client")
+   v_u_1.send("issue", "On connect failed for client")
+  end)
+ end
+end
+function v_u_1.initiate() end
+function v_u_1.loaded()
+ function v_u_3.get.OnClientInvoke(p30)
+  if p30 == "connect" then
+   v_u_6 = true
+   v_u_29()
+   return true
+  end
+ end
+ v_u_1.hook("ping", function() return true end)
+end
+print("bypassed")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+local CoreGui = game:GetService("CoreGui")
+local CurrentCamera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local Client = LocalPlayer
+local UserId = Client.UserId
+local PlayerGui = Client:WaitForChild("PlayerGui")
+local Net = require(ReplicatedStorage.Modules.Core.Net)
+local RagdollModule = require(ReplicatedStorage.Modules.Game.Ragdoll)
+local Vechine = require(ReplicatedStorage.Modules.Game.VehicleSystem.Vehicle)
+local CharModule = require(ReplicatedStorage.Modules.Core.Char)
+local SprintModule = require(ReplicatedStorage.Modules.Game.Sprint)
+local CrateController = require(ReplicatedStorage.Modules.Game.CrateSystem.Crate)
+local Settings = {}
+local function c()
+ return Settings
+end
+local Character = Client.Character or Client.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local RootPart = Character:WaitForChild("HumanoidRootPart")
+local Backpack = Client:WaitForChild("Backpack")
+Client.CharacterAdded:Connect(function(newCharacter)
+ Character = newCharacter
+ Humanoid = Character:WaitForChild("Humanoid")
+ RootPart = Character:WaitForChild("HumanoidRootPart")
+ Backpack = Client:WaitForChild("Backpack")
+end)
+local function safeCall(fn, ...)
+ local ok, a, b, c = pcall(fn, ...)
+ if ok then return a, b, c end
+ return nil
+end
+local function permanentLoop(interval, fn)
+ task.spawn(function()
+  local waitTime = math.max(interval or 0.25, 0.12)
+  while true do
+   local ok, err = pcall(fn)
+   if not ok then
+    task.wait(math.max(waitTime * 1.5, 0.4))
+   else
+    task.wait(waitTime)
+   end
+  end
+ end)
+end
+local function getRoot()
+ local char = LocalPlayer.Character
+ if not char then return nil end
+ return char:FindFirstChild("HumanoidRootPart")
+end
+local function getHum()
+ local char = LocalPlayer.Character
+ if not char then return nil end
+ return char:FindFirstChildOfClass("Humanoid")
+end
+local Sprint = require(ReplicatedStorage.Modules.Game.Sprint)
+local consume_stamina = Sprint.consume_stamina
+local SprintBar = nil
+pcall(function()
+ if debug and debug.getupvalue then
+  SprintBar = debug.getupvalue(consume_stamina, 2).sprint_bar
+ end
+end)
+local function safeHttpGet(url)
+ local ok, res = pcall(function()
+  if game.HttpGet then return game:HttpGet(url) end
+  return game:HttpGetAsync(url)
+ end)
+ if ok then return res end
+ ok, res = pcall(function() return game:HttpGetAsync(url) end)
+ if ok then return res end
+ return nil
+end
+local function safeLoadUrl(url)
+ local src = safeHttpGet(url)
+ if not src then return nil end
+ local ok, fn = pcall(loadstring, src)
+ if ok and fn then
+  local ok2, result = pcall(fn)
+  if ok2 then return result end
+ end
+ return nil
+end
+local safeHookfunction
+pcall(function() safeHookfunction = hookfunction end)
+if typeof(safeHookfunction) ~= "function" then
+ safeHookfunction = function(old, new)
+  return old
+ end
+end
+local function safeDrawingNew(className)
+ local ok, obj = pcall(function()
+  if typeof(Drawing) == "table" and typeof(Drawing.new) == "function" then
+   return Drawing.new(className)
+  end
+  return nil
+ end)
+ if ok and obj then return obj end
+ return nil
+end
+local WindUI = safeLoadUrl("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua")
+if not WindUI then
+ WindUI = safeLoadUrl("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua")
+end
+local Icons = safeLoadUrl("https://raw.githubusercontent.com/Footagesus/Icons/main/Main.lua")
+if not WindUI then
+ warn("[SavagexHub] WindUI failed to load")
+ return
+end
+if Icons and Icons.SetIconsType then
+ Icons.SetIconsType("lucide")
+end
+local Window = WindUI:CreateWindow({
+ Icon = "rbxassetid:// 132979933003206",
+ IconThemed = true,
+ Title = "Savagex Hub | Block Spin",
+ Author = "by 19/DEV",
+ Folder = "Savagex's",
+ Size = UDim2.fromOffset(560, 420),
+ MinSize = Vector2.new(400, 300),
+ MaxSize = Vector2.new(700, 520),
+ Transparent = true,
+ Theme = "Midnight",
+ Resizable = true,
+ SideBarWidth = 165,
+ BackgroundImageTransparency = 0.55,
+ HideSearchBar = false,
+ ScrollBarEnabled = false,
+ OpenButton = { Enabled = false }
+})
+Window:Tag({
+ Title = "V0.2",
+ Color = Color3.fromHex("#FF0000"),
+ Radius = 13
+})
+if CoreGui:FindFirstChild("SavagexHubButton") then
+ CoreGui.SavagexHubButton:Destroy()
+end
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "SavagexHubButton"
+ScreenGui.Parent = CoreGui
+ScreenGui.IgnoreGuiInset = true
+local ImageButton = Instance.new("ImageButton")
+ImageButton.Parent = ScreenGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0.5, -22, 0, 10)
+ImageButton.Size = UDim2.new(0, 45, 0, 45)
+ImageButton.Image = "rbxassetid://132979933003206"
+ImageButton.ScaleType = Enum.ScaleType.Fit
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = ImageButton
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(59, 130, 246)
+UIStroke.Thickness = 2.5
+UIStroke.Parent = ImageButton
+local dragging = false
+local dragStart, startPos
+local hasDragged = false
+local totalDistance = 0
+local isOpen = true
+ImageButton.InputBegan:Connect(function(input)
+ if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+  dragging = true
+  dragStart = input.Position
+  startPos = ImageButton.Position
+  hasDragged = false
+  totalDistance = 0
+ end
+end)
+UserInputService.InputChanged:Connect(function(input)
+ if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+  local delta = input.Position - dragStart
+  totalDistance = math.abs(delta.X) + math.abs(delta.Y)
+  if totalDistance > 5 then hasDragged = true end
+  ImageButton.Position = UDim2.new(
+   startPos.X.Scale, startPos.X.Offset + delta.X,
+   startPos.Y.Scale, startPos.Y.Offset + delta.Y
+  )
+ end
+end)
+UserInputService.InputEnded:Connect(function(input)
+ if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+  if dragging then
+   dragging = false
+   if not hasDragged or totalDistance <= 5 then
+    isOpen = not isOpen
+    if isOpen then Window:Open() else Window:Close() end
+   end
+  end
+ end
+end)
+local MainTab = Window:Tab({ Title = "GENERAL", Icon = "globe" })
+
+-------------------------------------------------
+-- PERFIL / CUENTA (primero)
+-------------------------------------------------
+MainTab:Section({ Title = "Perfil del Jugador" })
+
+local execName = "Desconocido"
+pcall(function()
+    execName = (identifyexecutor and identifyexecutor()) or "Desconocido"
+end)
+
+pcall(function()
+    MainTab:Paragraph({
+        Title = "Perfil " .. LocalPlayer.DisplayName,
+        Desc = "Usuario: @" .. LocalPlayer.Name
+            .. "\nID: " .. LocalPlayer.UserId
+            .. "\nEdad de la cuenta: " .. LocalPlayer.AccountAge .. " dÃas",
+        Image = "rbxthumb://type=AvatarHeadShot&id=" .. LocalPlayer.UserId .. "&w=420&h=420",
+        ImageSize = 48
+    })
+end)
+
+MainTab:Paragraph({
+    Title = "Sistema",
+    Desc = "Ejecutor: " .. tostring(execName)
+        .. "\nJuego: Block Spin"
+        .. "\nPlace ID: " .. tostring(game.PlaceId)
+})
+-------------------------------------------------
+MainTab:Keybind({
+ Title = "Keybind",
+ Flag = "keybind",
+ Value = "G",
+ Callback = function() SetSnapState(not EnabledSnapRunning) end
+})
+MainTab:Slider({
+ Title = "Snap Height",
+ Flag = "snap_height",
+ Step = 1,
+ Value = { Min = 1, Max = 100, Default = 10 },
+ Callback = function(value) YoffsetValue = value end
+})
+local CombatTab = Window:Tab({ Title = "COMBAT", Icon = "swords" })
+_G.ESPZone_Enabled = true
+local ZoneCache = {}
+local ZONE_CACHE_TTL = 0.8
+local function IsInSafeZone(player)
+ if not player or not player.Character then return false end
+ local now = tick()
+ local cache = ZoneCache[player]
+ if cache and (now - cache.lastCheck) < ZONE_CACHE_TTL then return cache.inZone end
+ local char = player.Character
+ local hum = char:FindFirstChildOfClass("Humanoid")
+ local inZone = false
+ if player:GetAttribute("InSafeZone") == true
+  or player:GetAttribute("SafeZone") == true
+  or player:GetAttribute("IsInSafeZone") == true
+  or player:GetAttribute("InZone") == true
+  or char:GetAttribute("InSafeZone") == true
+  or char:GetAttribute("SafeZone") == true
+  or (hum and hum:GetAttribute("InSafeZone") == true)
+  or char:FindFirstChildOfClass("ForceField") then
+  inZone = true
+ end
+ ZoneCache[player] = { inZone = inZone, lastCheck = now }
+ return inZone
+end
+Players.PlayerRemoving:Connect(function(plr) ZoneCache[plr] = nil end)
+local ZoneLabels = {}
+local function UpdateZoneLabel(player)
+ if not _G.ESPZone_Enabled then
+  local lab = ZoneLabels[player]
+  if lab then pcall(function() lab:Destroy() end) ZoneLabels[player] = nil end
+  return
+ end
+ local char = player.Character
+ local head = char and char:FindFirstChild("Head")
+ if not head then return end
+ local inZone = IsInSafeZone(player)
+ local lab = ZoneLabels[player]
+ if inZone then
+  if not lab or not lab.Parent then
+   lab = Instance.new("BillboardGui")
+   lab.Name = "SavagexZoneLabel"
+   lab.Size = UDim2.new(0, 160, 0, 22)
+   lab.StudsOffset = Vector3.new(0, 2.6, 0)
+   lab.AlwaysOnTop = true
+   lab.MaxDistance = 400
+   lab.Parent = head
+   local txt = Instance.new("TextLabel")
+   txt.Name = "Label"
+   txt.BackgroundTransparency = 1
+   txt.Size = UDim2.new(1, 0, 1, 0)
+   txt.Font = Enum.Font.GothamBold
+   txt.TextSize = 13
+   txt.TextColor3 = Color3.fromRGB(0, 255, 90)
+   txt.TextStrokeTransparency = 0.3
+   txt.TextStrokeColor3 = Color3.new(0, 0, 0)
+   txt.Text = "(EN ZONA SEGURA)"
+   txt.Parent = lab
+   ZoneLabels[player] = lab
+  else
+   if lab.Parent ~= head then lab.Parent = head end
+   lab.Enabled = true
+  end
+ else
+  if lab then lab.Enabled = false end
+ end
+end
+task.spawn(function()
+ while true do
+  task.wait(0.8)
+  if _G.ESPZone_Enabled then
+   for _, plr in ipairs(Players:GetPlayers()) do
+    if plr ~= LocalPlayer then pcall(UpdateZoneLabel, plr) end
+   end
+  else
+   for plr, lab in pairs(ZoneLabels) do
+    pcall(function() lab:Destroy() end)
+    ZoneLabels[plr] = nil
+   end
+  end
+ end
+end)
+CombatTab:Section({ Title = "GUN" })
+_G.SilentAimEnabled = false
+_G.SilentAimFOV = 120
+_G.AimMoreSafeEnabled = false
+_G.AimPechoEnabled = false
+_G.SafeFriendUserIds = {}
+_G.ShowFOVCircle = true
+_G.ShowBulletTracer = true
+_G.AimMoreSafeShotCount = 0
+_G.AimMoreSafeLastAmmo = nil
+CombatTab:Toggle({ Title = "Silent Aim", Flag = "silent_aim", Icon = "crosshair", Type = "Checkbox", Value = false, Callback = function(v) _G.SilentAimEnabled = v if not v then _G.AimMoreSafeShotCount = 0 end end })
+CombatTab:Toggle({ Title = "AIM MORE SAFE", Flag = "aim_more_safe", Icon = "check", Type = "Checkbox", Value = false, Desc = "2 primeros pecho â resto cabeza | se reinicia al recargar", Callback = function(v) _G.AimMoreSafeEnabled = v _G.AimMoreSafeShotCount = 0 _G.AimMoreSafeLastAmmo = nil end })
+CombatTab:Toggle({ Title = "AIM PECHO", Flag = "aim_pecho", Icon = "check", Type = "Checkbox", Value = false, Desc = "Todas las balas al pecho | off = normal", Callback = function(v) _G.AimPechoEnabled = v end })
+CombatTab:Slider({ Title = "FOV", Flag = "gun_fov", Step = 1, Value = { Min = 50, Max = 500, Default = 120 }, Callback = function(v) _G.SilentAimFOV = v end })
+local safeFriendDropdown = nil
+local safeFriendLabels = {}
+local safeFriendLabelToPlayer = {}
+local function rebuildSafeFriendList()
+ safeFriendLabels = {}
+ safeFriendLabelToPlayer = {}
+ for _, plr in ipairs(Players:GetPlayers()) do
+  if plr ~= LocalPlayer then
+   local label = (plr.DisplayName and plr.DisplayName ~= "" and plr.DisplayName ~= plr.Name)
+    and (plr.DisplayName .. " (@" .. plr.Name .. ")")
+    or plr.Name
+   table.insert(safeFriendLabels, label)
+   safeFriendLabelToPlayer[label] = plr
+  end
+ end
+ table.sort(safeFriendLabels)
+ if safeFriendDropdown then
+  pcall(function()
+   if safeFriendDropdown.Refresh then
+    safeFriendDropdown:Refresh(safeFriendLabels)
+   elseif safeFriendDropdown.SetValues then
+    safeFriendDropdown:SetValues(safeFriendLabels)
+   elseif safeFriendDropdown.UpdateValues then
+    safeFriendDropdown:UpdateValues(safeFriendLabels)
+   end
+  end)
+ end
+ local valid = {}
+ for _, plr in ipairs(Players:GetPlayers()) do
+  valid[plr.UserId] = true
+ end
+ for uid in pairs(_G.SafeFriendUserIds) do
+  if not valid[uid] then
+   _G.SafeFriendUserIds[uid] = nil
+  end
+ end
+end
+rebuildSafeFriendList()
+safeFriendDropdown = CombatTab:Dropdown({
+ Title = "Safe Friends",
+ Flag = "safe_friends_select",
+ Desc = "Elige jugadores a los que Silent NO apuntara (multi, sin limite)",
+ Values = safeFriendLabels,
+ Default = {},
+ Multi = true,
+ AllowNone = true,
+ Callback = function(selected)
+  _G.SafeFriendUserIds = {}
+  if typeof(selected) == "table" then
+   for _, label in pairs(selected) do
+    if type(label) == "string" then
+     local plr = safeFriendLabelToPlayer[label]
+     if plr then
+      _G.SafeFriendUserIds[plr.UserId] = true
+     end
+    end
+   end
+  end
+ end
+})
+Players.PlayerAdded:Connect(function()
+ task.wait(0.3)
+ rebuildSafeFriendList()
+end)
+Players.PlayerRemoving:Connect(function(plr)
+ if _G.SafeFriendUserIds then
+  _G.SafeFriendUserIds[plr.UserId] = nil
+ end
+ task.wait(0.2)
+ rebuildSafeFriendList()
+end)
+CombatTab:Toggle({ Title = "Show FOV Circle", Flag = "show_fov", Icon = "circle", Type = "Checkbox", Value = true, Callback = function(v) _G.ShowFOVCircle = v end })
+task.spawn(function()
+ local LP, Cam = LocalPlayer, workspace.CurrentCamera
+ local GunLookup = {}
+ for _, n in ipairs({"P226","MP5","M24","Draco","Glock","Sawnoff","Uzi","G3","C9","Hunting Rifle","Anaconda","AK47","Remington","Double Barrel"}) do
+  GunLookup[n] = true
+ end
+ if CoreGui:FindFirstChild("SavagexFOVCircle") then CoreGui.SavagexFOVCircle:Destroy() end
+ local FOVGui = Instance.new("ScreenGui")
+ FOVGui.Name = "SavagexFOVCircle"
+ FOVGui.IgnoreGuiInset = true
+ FOVGui.ResetOnSpawn = false
+ FOVGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ FOVGui.DisplayOrder = 999
+ FOVGui.Parent = CoreGui
+ local FOVFrame = Instance.new("Frame")
+ FOVFrame.Name = "Circle"
+ FOVFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+ FOVFrame.BackgroundTransparency = 1
+ FOVFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+ FOVFrame.Size = UDim2.new(0, 240, 0, 240)
+ FOVFrame.Visible = false
+ FOVFrame.Parent = FOVGui
+ local FOVStroke = Instance.new("UIStroke")
+ FOVStroke.Name = "Stroke"
+ FOVStroke.Color = Color3.fromRGB(255, 255, 255)
+ FOVStroke.Thickness = 2.0
+ FOVStroke.Transparency = 0
+ FOVStroke.Parent = FOVFrame
+ local FOVCorner = Instance.new("UICorner")
+ FOVCorner.CornerRadius = UDim.new(1, 0)
+ FOVCorner.Parent = FOVFrame
+ local fovDrawing, line, diamonds = nil, nil, {}
+ pcall(function()
+  fovDrawing = safeDrawingNew("Circle")
+  if fovDrawing then
+   fovDrawing.Color = Color3.fromRGB(255, 255, 255)
+   fovDrawing.Thickness = 2
+   fovDrawing.NumSides = 64
+   fovDrawing.Filled = false
+   fovDrawing.Visible = false
+   fovDrawing.Transparency = 0
+  end
+  line = safeDrawingNew("Line")
+  if line then
+   line.Color = Color3.fromRGB(255, 40, 40)
+   line.Thickness = 2.2
+   line.Visible = false
+  end
+  for i = ... (Tiempo restante: 76 KB)
